@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Form from './Form';
 
 const URL = 'http://localhost:9000/api/todos'
 
@@ -22,7 +23,8 @@ changeHandlerForInput = event => {
   const { value } = event.target
   this.setState({ ...this.state, taskInput: value})
 }
-resetForm = () => this.setState({ ...this.state, taskInput: '' })
+
+resetForm = () => this.setState({ ...this.props.state, taskInput: '' })
 
 setAxiosResponseError = err => this.setState({ ...this.state, error: err.response.data.message })
 
@@ -81,12 +83,15 @@ componentDidMount() {
               return acc
             }, [])
           }
+          <Form 
+            taskInput={this.state.taskInput}
+            displayCompleted={this.state.displayCompleted}
+            toggleVisibleCompleted={this.toggleVisibleCompleted}
+            changeHandlerForInput={this.changeHandlerForInput}
+            postTask={this.postTask}
+          />
         </div>
-        <form id='todoForm' onSubmit={this.postTask}>
-          <input placeholder='Enter New Task' type='text' value={this.taskInput} onChange={this.changeHandlerForInput} />
-          <button>Add Task</button>
-        </form>
-        <button onClick={this.toggleVisibleCompleted}>{this.state.displayCompleted ? `Hide` : `Show`} Completed</button>
+        
       </div>
     )
   }
