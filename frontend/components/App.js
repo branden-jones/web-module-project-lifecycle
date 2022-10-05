@@ -22,6 +22,20 @@ changeHandlerForInput = event => {
   this.setState({ ...this.state, taskInput: value})
 }
 
+postTask = () => {
+  axios.post(URL, { name: this.state.taskInput })
+    .then(res => {
+      this.fetchAllTodos()
+      this.setState({ ...this.state, taskInput: '' })
+    })
+    .catch(err => console.error(err))
+}
+
+addTaskSubmit = event => {
+  event.preventDefault();
+  this.postTask()
+}
+
 fetchAllTodos = () => {
   axios.get(URL)
     .then(res => {
@@ -48,7 +62,7 @@ componentDidMount() {
             })
           }
         </div>
-        <form id='todoForm'>
+        <form id='todoForm' onSubmit={this.postTask}>
           <input placeholder='Enter New Task' type='text' value={this.taskInput} onChange={this.changeHandlerForInput} />
           <button>Add Task</button>
         </form>
