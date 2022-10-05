@@ -12,7 +12,7 @@ export default class App extends React.Component {
   // }
 state = {
   todos: [],
-  // error: ''
+  error: '',
   taskInput: '',
 }
 
@@ -21,14 +21,17 @@ changeHandlerForInput = event => {
   const { value } = event.target
   this.setState({ ...this.state, taskInput: value})
 }
+resetForm = () => this.setState({ ...this.state, taskInput: '' })
+
+setAxiosResponseError = err => this.setState({ ...this.state, error: err.response.data.message })
 
 postTask = () => {
   axios.post(URL, { name: this.state.taskInput })
     .then(res => {
       this.fetchAllTodos()
-      this.setState({ ...this.state, taskInput: '' })
+      this.resetForm()
     })
-    .catch(err => console.error(err))
+    .catch(this.setAxiosResponseError)
 }
 
 addTaskSubmit = event => {
@@ -41,9 +44,7 @@ fetchAllTodos = () => {
     .then(res => {
       this.setState({...this.state, todos: res.data.data})
     })
-    .catch(err =>
-      console.log(`NOOOO`, err)
-    )
+    .catch(this.setAxiosResponseError)
 }
 
 componentDidMount() {
@@ -53,7 +54,7 @@ componentDidMount() {
   render() {
     return (
       <div>
-        <div id='error'>No Errors</div>
+        <div id='error'>{this.state.error}</div>
         <div id='todos'>
           <h2>Todos:</h2>
           {
