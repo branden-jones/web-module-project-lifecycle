@@ -34,6 +34,17 @@ postTask = () => {
     .catch(this.setAxiosResponseError)
 }
 
+toggleCompleted = id => event => {
+  axios.patch(`${URL}/${id}`)
+    .then(res => {
+      this.setState({ ...this.state, todos: this.state.todos.map(task => {
+        if(task.id !== id) return task
+        return res.data.data
+      })})
+    })
+    .catch(this.setAxiosResponseError)
+  }
+
 addTaskSubmit = event => {
   event.preventDefault();
   this.postTask()
@@ -59,7 +70,7 @@ componentDidMount() {
           <h2>Todos:</h2>
           {
             this.state.todos.map(task => {
-              return <div key={task.id}>{task.name} </div>
+              return <div onClick={this.toggleCompleted(task.id)} key={task.id}>{task.name} {task.completed ? ` Done!` : `` }</div>
             })
           }
         </div>
