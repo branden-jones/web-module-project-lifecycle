@@ -12,6 +12,14 @@ export default class App extends React.Component {
   // }
 state = {
   todos: [],
+  // error: ''
+  taskInput: '',
+}
+
+changeHandlerForInput = event => {
+  event.preventDefault();
+  const { value } = event.target
+  this.setState({ ...this.state, taskInput: value})
 }
 
 fetchAllTodos = () => {
@@ -20,7 +28,7 @@ fetchAllTodos = () => {
       this.setState({...this.state, todos: res.data.data})
     })
     .catch(err =>
-      console.error(`NOOOO`, err)
+      console.log(`NOOOO`, err)
     )
 }
 
@@ -41,7 +49,7 @@ componentDidMount() {
           }
         </div>
         <form id='todoForm'>
-          <input placeholder='Enter New Task' type='text' />
+          <input placeholder='Enter New Task' type='text' value={this.taskInput} onChange={this.changeHandlerForInput} />
           <button>Add Task</button>
         </form>
         <button>Hide Completed</button>
