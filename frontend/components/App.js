@@ -74,11 +74,11 @@ componentDidMount() {
     return (
       <div>
         <div id='error'>{this.state.error}</div>
+          
           <TodoList 
             todos={this.state.todos}
             displayCompleted={this.state.displayCompleted}
             toggleCompleted={this.toggleCompleted}
-            
           /> 
         
           <Form 
@@ -88,7 +88,6 @@ componentDidMount() {
             changeHandlerForInput={this.changeHandlerForInput}
             postTask={this.postTask}
           />
-        
         
       </div>
     )
