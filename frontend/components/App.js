@@ -14,6 +14,7 @@ state = {
   todos: [],
   error: '',
   taskInput: '',
+  displayCompleted: true,
 }
 
 changeHandlerForInput = event => {
@@ -58,6 +59,10 @@ fetchAllTodos = () => {
     .catch(this.setAxiosResponseError)
 }
 
+toggleVisibleCompleted = () => {
+  this.setState({ ...this.state, displayCompleted: !this.state.displayCompleted })
+}
+
 componentDidMount() {
   this.fetchAllTodos();
 }
@@ -69,16 +74,19 @@ componentDidMount() {
         <div id='todos'>
           <h2>Todos:</h2>
           {
-            this.state.todos.map(task => {
-              return <div onClick={this.toggleCompleted(task.id)} key={task.id}>{task.name} {task.completed ? ` Done!` : `` }</div>
-            })
+            this.state.todos.reduce((acc, task) => {
+              if (this.state.displayCompleted || !task.completed) return acc.concat(
+                <div onClick={this.toggleCompleted(task.id)} key={task.id}>{task.name} {task.completed ? ` Done!` : `` }</div>
+              )
+              return acc
+            }, [])
           }
         </div>
         <form id='todoForm' onSubmit={this.postTask}>
           <input placeholder='Enter New Task' type='text' value={this.taskInput} onChange={this.changeHandlerForInput} />
           <button>Add Task</button>
         </form>
-        <button>Hide Completed</button>
+        <button onClick={this.toggleVisibleCompleted}>{this.state.displayCompleted ? `Hide` : `Show`} Completed</button>
       </div>
     )
   }
